@@ -107,11 +107,15 @@ export default async function(uiBuilder: UIBuilder, { t }: UseTranslationRespons
     }else if(opType === 'copyField'){
       uiBuilder.form((form) => ({
         formItems: [
-          form.textArea('copyCount', { label: t('opType.copyCount') }),
+          form.inputNumber('copyCount', { label: t('opType.copyCount'), defaultValue: 1  }),
         ],
         buttons: ['确定'],
       }), async ({ values }: { values: any }) => {
           const { copyCount } = values;
+
+          if(copyCount<=0){
+            uiBuilder.message.success('复制次数不能小于0');
+          }
         for(let i = 0; i < fieldList.length; i++){
           const field = await table.getFieldMetaById(fieldList[i].id);
           let newField = field;
